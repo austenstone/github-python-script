@@ -128,8 +128,20 @@ class GitHubWrapper:
         self._token = token
         self._base_url = base_url or "https://api.github.com"
     
-    def get_repo(self, owner: str, repo: str):
-        """Get repository object"""
+    def __getattr__(self, name):
+        """Delegate unknown attributes to the underlying PyGithub Github object"""
+        return getattr(self._github, name)
+    
+    def get_repo(self, owner: str, repo: str = None):
+        """Get repository object
+        
+        Args:
+            owner: Repository owner or full repo path (owner/repo)
+            repo: Repository name (optional if owner contains full path)
+        """
+        if repo is None:
+            # Assume owner is the full path
+            return self._github.get_repo(owner)
         return self._github.get_repo(f"{owner}/{repo}")
     
     def get_user(self, username: str):
