@@ -3,7 +3,7 @@ import json
 import os
 import sys
 from typing import Any, Dict, Optional
-from github import Github, GithubException
+from github import Github, GithubException, Auth
 from github.GithubRetry import GithubRetry
 import urllib3.util.retry
 
@@ -120,7 +120,7 @@ class GitHubWrapper:
             retry_config = None
         
         self._github = Github(
-            auth=token,
+            auth=Auth.Token(token) if token else None,
             base_url=base_url or "https://api.github.com",
             retry=retry_config
         )
