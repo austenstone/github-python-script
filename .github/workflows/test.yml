@@ -58,3 +58,11 @@ jobs:
         run: |
           echo "Actor: ${{ fromJson(steps.test-json.outputs.result).actor }}"
           echo "Repo: ${{ fromJson(steps.test-json.outputs.result).repo }}"
+      
+      - name: Test enumerate loop
+        uses: ./
+        with:
+          script: |
+            friends = ['john', 'pat', 'gary', 'michael']
+            for i, name in enumerate(friends):
+                print(f"iteration {i} is {name}")
