@@ -73,12 +73,12 @@ try:
     exec(user_script, exec_globals)
     result = exec_globals.get('__result__')
     
-    # Output the result
+    # Output the result using environment file
     if result is not None:
         if "${resultEncoding}" == "json":
-            print("::set-output name=result::" + json.dumps(result))
+            core.set_output("result", json.dumps(result))
         else:
-            print("::set-output name=result::" + str(result))
+            core.set_output("result", str(result))
 except Exception as e:
     core.set_failed(str(e))
     sys.exit(1)
@@ -114,13 +114,8 @@ except Exception as e:
       return;
     }
 
-    // Parse output for result
-    const resultMatch = output.match(/::set-output name=result::(.+)/);
-    if (resultMatch) {
-      const result = resultMatch[1];
-      core.setOutput("result", result);
-    }
-
+    // The Python script uses GITHUB_OUTPUT environment file
+    // Output is automatically handled by core.setOutput() in Python
     core.info("Script execution completed successfully");
   } catch (error) {
     if (error instanceof Error) {
