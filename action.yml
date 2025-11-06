@@ -1,15 +1,41 @@
-name: TypeScript Action
+name: GitHub Python Script
 author: Austen Stone
-description: A TypeScript Action
+description: Run Python scripts with access to GitHub API and workflow context
 branding:
-  icon: "plus"
+  icon: "code"
   color: "blue"
 
 inputs:
+  script:
+    description: The Python script to run
+    required: true
   github-token:
     description: The GitHub token used to create an authenticated client
     default: ${{ github.token }}
     required: false
+  result-encoding:
+    description: The encoding to use for the result (json or string)
+    default: json
+    required: false
+  retries:
+    description: Number of times to retry failed requests
+    default: "0"
+    required: false
+  retry-exempt-status-codes:
+    description: Comma-separated list of status codes to exempt from retries
+    default: "400,401,403,404,422"
+    required: false
+  base-url:
+    description: Base URL for GitHub API (for GitHub Enterprise)
+    required: false
+  python-version:
+    description: Python version to use
+    default: "3.x"
+    required: false
+
+outputs:
+  result:
+    description: The return value of the script, encoded as specified by result-encoding
 
 runs:
   using: "node20"

@@ -1,8 +1,8 @@
 {
-  "name": "action-typescript",
+  "name": "github-python-script",
   "version": "1.0.0",
   "type": "module",
-  "description": "GitHub Actions TypeScript template",
+  "description": "GitHub Action to run Python scripts with GitHub API access",
   "private": true,
   "scripts": {
     "build": "ncc build src/index.ts -o dist --source-map --license licenses.txt",
@@ -12,15 +12,17 @@
   },
   "keywords": [
     "actions",
-    "node",
+    "python",
     "github",
-    "typescript"
+    "github-api",
+    "pygithub",
+    "automation"
   ],
   "author": "Austen Stone",
   "readme": "README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/austenstone/action-typescript.git"
+    "url": "https://github.com/austenstone/github-python-script.git"
   },
   "license": "MIT",
   "jest": {
@@ -54,6 +56,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
+    "@actions/exec": "^1.1.1",
     "@actions/github": "^6.0.1"
   },
   "devDependencies": {

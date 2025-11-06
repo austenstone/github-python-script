@@ -1,0 +1,60 @@
+name: Test Python Script
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  test-basic:
+    name: Basic Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Print context info
+        uses: ./
+        with:
+          script: |
+            core.info(f"👋 Hello from {context.actor}!")
+            core.info(f"Repository: {context.repo['owner']}/{context.repo['repo']}")
+            core.info(f"Event: {context.event_name}")
+            core.info(f"SHA: {context.sha}")
+      
+      - name: List repository info
+        uses: ./
+        with:
+          script: |
+            repo = github.get_repo(f"{context.repo['owner']}/{context.repo['repo']}")
+            core.info(f"⭐ Stars: {repo.stargazers_count}")
+            core.info(f"🍴 Forks: {repo.forks_count}")
+            core.info(f"👀 Watchers: {repo.watchers_count}")
+            core.info(f"📝 Description: {repo.description}")
+      
+      - name: Test return value
+        id: test-return
+        uses: ./
+        with:
+          result-encoding: string
+          script: |
+            __result__ = f"Success from {context.actor}!"
+      
+      - name: Display result
+        run: echo "${{ steps.test-return.outputs.result }}"
+      
+      - name: Test JSON return
+        id: test-json
+        uses: ./
+        with:
+          result-encoding: json
+          script: |
+            __result__ = {
+                "actor": context.actor,
+                "repo": context.repo["repo"],
+                "event": context.event_name
+            }
+      
+      - name: Display JSON result
+        run: |
+          echo "Actor: ${{ fromJson(steps.test-json.outputs.result).actor }}"
+          echo "Repo: ${{ fromJson(steps.test-json.outputs.result).repo }}"

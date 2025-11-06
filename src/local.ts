@@ -12,7 +12,32 @@ for (const key in result.parsed) {
   }
 }
 
-process.env.GITHUB_REPOSITORY='owner/repo-name';
+import "dotenv/config";
+
+// Set up test environment variables
+process.env.INPUT_SCRIPT = `
+core.info("Testing GitHub Python Script!")
+core.info(f"Repository: {context.repo['owner']}/{context.repo['repo']}")
+core.info(f"Actor: {context.actor}")
+
+# Test return value
+__result__ = {"status": "success", "message": "Local test passed!"}
+`;
+
+process.env.INPUT_GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
+process.env.INPUT_RESULT_ENCODING = "json";
+process.env.GITHUB_REPOSITORY = "austenstone/github-python-script";
+process.env.GITHUB_ACTOR = "austenstone";
+process.env.GITHUB_EVENT_NAME = "push";
+process.env.GITHUB_SHA = "abc123";
+process.env.GITHUB_REF = "refs/heads/main";
+
+// Run the action
+import("./index.js").catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
+
 process.env.GITHUB_REPOSITORY_OWNER='owner';
 process.env.GITHUB_WORKFLOW='My Workflow';
 process.env.GITHUB_ACTION='action-name';
